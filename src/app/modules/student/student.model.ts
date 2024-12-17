@@ -157,16 +157,14 @@ studentSchema.virtual('fullName').get(function () {
 });
 
 // pre save middleware/ hook : will work on create()  save()
-studentSchema.pre('save', async function (next) {
-  // console.log(this, 'pre hook : we will save  data');
+studentSchema.pre('save', async function () {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
-  const user = this; // doc
-  // hashing password and save into DB
+  const user = this;
+
   user.password = await bcrypt.hash(
     user.password,
-    Number(config.bcrypt_salt_rounds),
+    Number(config.bcrypt_salt_round), 
   );
-  next();
 });
 
 // post save middleware / hook
