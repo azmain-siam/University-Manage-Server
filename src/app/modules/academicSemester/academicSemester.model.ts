@@ -1,38 +1,68 @@
-import { model, Schema } from 'mongoose';
-import { TAcademicSemester } from './academicSemester.interface';
+import { Schema, model } from 'mongoose';
 import {
-  academicSemesterCodes,
-  academicSemesterNames,
-  months,
+  AcademicSemesterCode,
+  AcademicSemesterName,
+  Months,
 } from './academicSemester.constant';
+import { TAcademicSemseter } from './academicSemester.interface';
 
-const academicSemesterSchema = new Schema<TAcademicSemester>(
+const acdemicSemesterSchema = new Schema<TAcademicSemseter>(
   {
-    name: { type: String, enum: academicSemesterNames, required: true },
-    year: { type: String, required: true },
-    code: { type: String, enum: academicSemesterCodes, required: true },
-    startMonth: { type: String, enum: months, required: true },
-    endMonth: { type: String, enum: months, required: true },
+    name: {
+      type: String,
+      required: true,
+      enum: AcademicSemesterName,
+    },
+    year: {
+      type: String,
+      required: true,
+    },
+    code: {
+      type: String,
+      required: true,
+      enum: AcademicSemesterCode,
+    },
+    startMonth: {
+      type: String,
+      required: true,
+      enum: Months,
+    },
+    endMonth: {
+      type: String,
+      required: true,
+      enum: Months,
+    },
   },
   {
     timestamps: true,
   },
 );
 
-academicSemesterSchema.pre('save', async function (next) {
+acdemicSemesterSchema.pre('save', async function (next) {
   const isSemesterExists = await AcademicSemester.findOne({
-    name: this.name,
     year: this.year,
+    name: this.name,
   });
 
   if (isSemesterExists) {
-    throw new Error('Semester is already exists');
+    throw new Error('Semester is already exists !');
   }
-
   next();
 });
 
-export const AcademicSemester = model<TAcademicSemester>(
-  'academic-Semester',
-  academicSemesterSchema,
+export const AcademicSemester = model<TAcademicSemseter>(
+  'AcademicSemester',
+  acdemicSemesterSchema,
 );
+
+// Name Year
+//2030 Autumn => Created
+// 2031 Autumn
+//2030 Autumn => XXX
+//2030 Fall => Created
+
+
+
+// Autumn 01
+// Summar 02
+// Fall 03

@@ -1,24 +1,28 @@
+import { RequestHandler } from 'express';
+import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
+import sendResponse from '../../utils/sendResponse';
 import { StudentServices } from './student.service';
 
-const getAllStudents = catchAsync(async (req, res) => {
-  const result = await StudentServices.getAllStudentsFromDB();
+const getSingleStudent = catchAsync(async (req, res) => {
+  const { studentId } = req.params;
+  const result = await StudentServices.getSingleStudentFromDB(studentId);
 
-  res.status(200).json({
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
     success: true,
-    message: 'Students are retrieved successfully',
+    message: 'Student is retrieved succesfully',
     data: result,
   });
 });
 
-const getSingleStudent = catchAsync(async (req, res) => {
-  const { studentId } = req.params;
+const getAllStudents: RequestHandler = catchAsync(async (req, res) => {
+  const result = await StudentServices.getAllStudentsFromDB();
 
-  const result = await StudentServices.getSingleStudentFromDB(studentId);
-
-  res.status(200).json({
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
     success: true,
-    message: 'Student is retrieved successfully',
+    message: 'Student are retrieved succesfully',
     data: result,
   });
 });
@@ -27,9 +31,10 @@ const deleteStudent = catchAsync(async (req, res) => {
   const { studentId } = req.params;
   const result = await StudentServices.deleteStudentFromDB(studentId);
 
-  res.status(200).json({
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
     success: true,
-    message: 'Student is deleted successfully',
+    message: 'Student is deleted succesfully',
     data: result,
   });
 });
